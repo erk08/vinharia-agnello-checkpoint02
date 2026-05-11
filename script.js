@@ -2,7 +2,10 @@ let vinhos = [];
 let estoques = [];
 let estados = [];
 
+let rodando = true;
+
 function menu() {
+
     let textomenu = `
 ---------- Menu ----------
 1 - Cadastrar Vinho e Estoque
@@ -10,90 +13,158 @@ function menu() {
 3 - Estado do Vinho
 4 - Sair
 --------------------------`;
+
     return prompt(textomenu + '\nQual opção deseja selecionar?');
 }
-let rodando = true;
-while (rodando) {
-    let opcao = menu();
-    switch (opcao) {
-        case '1':
-            let nome = prompt('Digite o nome do vinho:');
-            if (nome === null) break;
 
-            let qtd = parseInt(prompt(`Qual o estoque de ${nome}?`));
-            let etd = prompt(`Qual o estado de ${nome} (jovem, amadurecido ou antigo)?`).trim().toUpperCase();
-            
-            vinhos.push(nome);
-            estoques.push(qtd);
-            estados.push(etd);
+function opcoes() {
 
-            alert(`${nome} cadastrado com ${qtd} unidades e ${etd}. Detalhamento no console`);
-            break;
+    while (rodando) {
 
-        case '2':
-            if (vinhos.length === 0) {
-                alert("Nenhum vinho cadastrado.");
+        let opcao = menu();
+
+        switch (opcao) {
+
+            case '1':
+
+                let nome = prompt('Digite o nome do vinho:');
+
+                if (nome === null || nome.trim() === '') {
+                    alert('Nome inválido.');
+                    break;
+                }
+
+                let qtd = parseInt(
+                    prompt(`Qual o estoque de ${nome}?`)
+                );
+
+                if (isNaN(qtd) || qtd < 0) {
+                    alert('Estoque inválido.');
+                    break;
+                }
+
+                let etd = prompt(
+                    `Qual o estado de ${nome} (jovem, amadurecido ou envelhecido)?`
+                );
+
+                if (etd === null) {
+                    alert('Estado inválido.');
+                    break;
+                }
+
+                etd = etd.trim().toUpperCase();
+
+                vinhos.push(nome);
+                estoques.push(qtd);
+                estados.push(etd);
+
+                alert(
+                    `${nome} cadastrado com ${qtd} unidades e estado ${etd}.`
+                );
+
                 break;
-            }
 
-            let classificacao = "--- Estado dos Vinhos ---\n";
+            case '2':
 
-            for (let i = 0; i < vinhos.length; i++) {
-                let status = "";
-
-                if (estoques[i] === 0) {
-                    status = "ESGOTADO";
-                } else if (estoques[i] < 5) {
-                    status = "ESTOQUE BAIXO";
-                } else {
-                    status = "OK";
+                if (vinhos.length === 0) {
+                    alert("Nenhum vinho cadastrado.");
+                    break;
                 }
 
-                classificacao += `${i + 1}. ${vinhos[i]}: ${status} (${estoques[i]} un) (MAIS INFORMAÇÕES NO CONSOLE)\n`;
-            }
+                let classificacao = "--- Estado dos Vinhos ---\n";
 
-            alert(classificacao);
-            break
-            case '3':
-                if (vinhos.length === 0){
-                    alert("Sem estados cadastrados!")
-                }
-                
-                let classestado = "---Estado Dos Vinhos---\n"
-                
-                for (let i = 0; i < vinhos.length; i++){
+                for (let i = 0; i < vinhos.length; i++) {
+
                     let status = "";
-                    
-                    if (estados[i]===0){
-                        desc="Nenhum estado cadastrado"
-                    } else if (estados[i] =='JOVEM'){
-                        desc = "Frescor, acidez e aroma intenso"
-                    } else if (estados[i] == 'AMADURECIDO'){
-                        desc = "Complexo, aromas terceários e equilibrado."
-                    }  else if (estados[i] == 'ENVELHECIDO'){
-                        desc="Delicado, macio, claro com aromas complexos"
-                    }else{
-                        desc="Estado inválido"
+
+                    if (estoques[i] === 0) {
+                        status = "ESGOTADO";
                     }
-                    classestado += `${i + 1}. ${vinhos[i]}: ${desc}\n`
+
+                    else if (estoques[i] < 5) {
+                        status = "ESTOQUE BAIXO";
+                    }
+
+                    else {
+                        status = "OK";
+                    }
+
+                    classificacao +=
+                        `${i + 1}. ${vinhos[i]}: ${status} (${estoques[i]} un)\n`;
                 }
-                
-                alert(classestado)
-                break
+
+                alert(classificacao);
+
+                break;
+
+            case '3':
+
+                if (vinhos.length === 0) {
+                    alert("Sem estados cadastrados!");
+                    break;
+                }
+
+                let classestado = "--- Estado Dos Vinhos ---\n";
+
+                for (let i = 0; i < vinhos.length; i++) {
+
+                    let desc = "";
+
+                    if (estados[i] === 'JOVEM') {
+
+                        desc = "Frescor, acidez e aroma intenso";
+
+                    } else if (estados[i] === 'AMADURECIDO') {
+
+                        desc = "Complexo, aromas terciários e equilibrado.";
+
+                    } else if (estados[i] === 'ENVELHECIDO') {
+
+                        desc = "Delicado, macio e aromas complexos";
+
+                    } else {
+
+                        desc = "Estado inválido";
+                    }
+
+                    classestado +=
+                        `${i + 1}. ${vinhos[i]}: ${desc}\n`;
+                }
+
+                alert(classestado);
+
+                break;
+
             case '4':
+
                 alert("Encerrando o programa...");
                 rodando = false;
+
                 break;
+
             default:
-                alert("Opção inválida")
-                break
-            }
-    if (vinhos.length > 0 && rodando){
-        let relatorioo = "---Relatório de Atualização---\n";
-        for (let i=0;i<vinhos.length; i++){
-            relatorioo+= `${vinhos[i]}: ${estoques[i]} un | ${estados[i]}\n`;
+
+                alert("Opção inválida.");
+                break;
         }
-        console.log(relatorioo);
-        
+
+        if (vinhos.length > 0 && rodando) {
+
+            let relatorioo = "--- Relatório de Atualização ---\n";
+
+            for (let i = 0; i < vinhos.length; i++) {
+
+                relatorioo +=
+                    `${vinhos[i]}: ${estoques[i]} un | ${estados[i]}\n`;
+            }
+
+            console.log(relatorioo);
+        }
     }
 }
+
+function main() {
+    opcoes();
+}
+
+main();
